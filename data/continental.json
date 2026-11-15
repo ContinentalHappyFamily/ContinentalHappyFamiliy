@@ -300,6 +300,28 @@
           ]
         }
       ]
+    },
+    {
+      "id": "mwi65j6zfhl4",
+      "date": "2026-11-15",
+      "players": [
+        "albert",
+        "cristina-a"
+      ],
+      "created": "2026-11-15T18:29:31.883Z",
+      "createdBy": "cristina-a",
+      "games": [
+        {
+          "id": "mwi65j6z74mm",
+          "number": 1,
+          "players": [
+            "albert",
+            "cristina-a"
+          ],
+          "created": "2026-11-15T18:29:31.883Z",
+          "rounds": []
+        }
+      ]
     }
   ]
 }
