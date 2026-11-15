@@ -319,7 +319,17 @@
             "cristina-a"
           ],
           "created": "2026-11-15T18:29:31.883Z",
-          "rounds": []
+          "rounds": [
+            {
+              "n": 1,
+              "scores": {
+                "albert": 0,
+                "cristina-a": 50
+              },
+              "by": "cristina-a",
+              "at": "2026-11-15T18:29:43.760Z"
+            }
+          ]
         }
       ]
     }
