@@ -188,7 +188,20 @@
             "cristina-a"
           ],
           "created": "2026-11-15T17:54:02.636Z",
-          "rounds": []
+          "rounds": [
+            {
+              "n": 1,
+              "scores": {
+                "joan": 10,
+                "albert": 10,
+                "ricard": 10,
+                "cristina-l": 10,
+                "cristina-a": 0
+              },
+              "by": "joan",
+              "at": "2026-11-15T17:54:41.011Z"
+            }
+          ]
         }
       ]
     }
