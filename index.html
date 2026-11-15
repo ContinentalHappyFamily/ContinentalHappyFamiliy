@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e3b2c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Continental · Happy Family</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>">
+<style>
+:root{
+  --felt:#0e3b2c; --felt-2:#14513c; --felt-3:#1b6a4f;
+  --paper:#fbf7ee; --paper-2:#f1ead9; --ink:#1d1b16; --muted:#6f6857;
+  --red:#b3261e; --gold:#c9a227; --line:#ddd3bd;
+  --ok:#1f7a4d; --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:radial-gradient(ellipse at top,var(--felt-3),var(--felt) 70%) fixed;
+  color:var(--ink); min-height:100vh; padding-bottom:84px;
+}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;margin:0}
+button,input,select{font:inherit}
+a{color:inherit}
+.wrap{max-width:760px;margin:0 auto;padding:0 14px}
+
+/* Header */
+header{color:var(--paper);padding:18px 0 10px}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .suits{font-size:22px;letter-spacing:2px}
+.brand .suits .r{color:#ff8a80}
+.brand h1{font-size:22px;line-height:1.05}
+.brand small{display:block;font-family:system-ui,sans-serif;font-size:12px;opacity:.75;letter-spacing:.08em;text-transform:uppercase}
+.me{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:var(--paper);
+  border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;white-space:nowrap}
+.sync{font-size:12px;color:var(--paper);opacity:.7;text-align:right;padding:0 14px;max-width:760px;margin:0 auto}
+.sync.err{color:#ffb4a9;opacity:1}
+
+/* Cards */
+.card{background:var(--paper);border-radius:var(--radius);padding:16px;margin:12px 0;
+  box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.card h2{font-size:20px;margin-bottom:10px}
+.card h3{font-size:16px;margin:4px 0 8px}
+.muted{color:var(--muted);font-size:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:10px}
+
+/* Buttons */
+.btn{border:0;border-radius:10px;padding:11px 16px;cursor:pointer;font-weight:600;
+  background:var(--felt-2);color:var(--paper)}
+.btn:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.red{background:var(--red)}
+.btn.ghost{background:transparent;color:var(--felt-2);border:1.5px solid var(--felt-2)}
+.btn.block{width:100%}
+.btn.small{padding:7px 11px;font-size:14px}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:15px}
+.rank th,.rank td{padding:8px 3px}
+th,td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--line)}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}
+td.l,th.l{text-align:left}
+tr.lead td{background:#fff6d6}
+.medal{font-size:18px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.score-table{table-layout:fixed}
+.score-table th,.score-table td{padding:7px 2px}
+.score-table th.l{width:54px}
+.score-table th.pl{color:var(--ink);font-size:12px;text-transform:none;letter-spacing:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.score-table td.rd{text-align:left;font-size:11px;color:var(--muted);white-space:nowrap}
+.score-table td.rd b{color:var(--ink);font-size:14px;margin-right:2px}
+.score-table td .pts{font-size:15px;font-weight:600}
+.score-table td .acc{display:block;font-size:12px;color:var(--muted)}
+.score-table tr.total td{font-weight:700;font-size:17px;border-top:2px solid var(--ink);border-bottom:0}
+.zero{color:var(--ok)}
+.win{color:var(--ok);font-weight:700}
+
+/* Lists */
+.list{list-style:none;margin:0;padding:0}
+.list li{border-bottom:1px solid var(--line)}
+.list li:last-child{border-bottom:0}
+.list a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 2px;text-decoration:none}
+.chip{display:inline-block;font-size:12px;padding:3px 8px;border-radius:999px;background:var(--paper-2);color:var(--muted);margin:2px 3px 2px 0}
+.chip.on{background:#d9efe3;color:var(--ok)}
+.chip.live{background:#ffe3df;color:var(--red)}
+
+/* Forms */
+label.check{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;cursor:pointer;background:#fff}
+label.check input{width:20px;height:20px;accent-color:var(--felt-2)}
+label.check:has(input:checked){border-color:var(--felt-2);background:#eef7f2}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+input[type=date],input[type=text],input[type=number],select{
+  width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff}
+input:focus,select:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+.field{margin:10px 0}
+.field > span{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+
+.entry{display:grid;grid-template-columns:1fr 110px;gap:8px;align-items:center;margin:6px 0}
+.entry input{font-size:20px;text-align:center;font-weight:600;padding:8px}
+.entry .zbtn{font-size:12px;margin-left:6px}
+.contract{background:var(--felt);color:var(--paper);border-radius:10px;padding:10px 14px;margin-bottom:12px}
+.contract small{opacity:.7;text-transform:uppercase;letter-spacing:.08em;font-size:11px}
+.contract div{font-family:Georgia,serif;font-size:20px}
+
+.seg{display:inline-flex;background:var(--paper-2);border-radius:10px;padding:3px}
+.seg button{border:0;background:transparent;padding:6px 10px;border-radius:8px;cursor:pointer;color:var(--muted);font-weight:600;font-size:13px}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+
+/* Tab bar */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:1px solid var(--line);
+  display:flex;justify-content:space-around;padding:6px 0 calc(6px + env(safe-area-inset-bottom));z-index:10}
+nav.tabs a{flex:1;text-align:center;text-decoration:none;color:var(--muted);font-size:12px;padding:4px}
+nav.tabs a .i{display:block;font-size:22px;line-height:1.1}
+nav.tabs a.on{color:var(--felt-2);font-weight:700}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+@media(min-width:600px){.modal-bg{align-items:center}}
+.modal{background:var(--paper);width:100%;max-width:460px;border-radius:18px 18px 0 0;padding:20px;max-height:90vh;overflow:auto}
+@media(min-width:600px){.modal{border-radius:18px}}
+.modal h2{font-size:21px;margin-bottom:6px}
+.warn{background:#fff1ee;border-left:4px solid var(--red);padding:10px 12px;border-radius:6px;font-size:14px;margin:12px 0}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;z-index:60;font-size:14px;max-width:90vw}
+.empty{text-align:center;padding:26px 10px;color:var(--muted)}
+.empty .big{font-size:40px}
+.back{color:var(--paper);text-decoration:none;font-size:14px;opacity:.85;display:inline-block;margin-top:6px}
+code{background:var(--paper-2);padding:1px 5px;border-radius:4px;font-size:13px;word-break:break-all}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="suits">♠<span class="r">♥</span></div>
+      <div><h1>Continental</h1><small>Happy Family</small></div>
+    </div>
+    <button class="me" id="meBtn" onclick="pickMe()">¿Quién eres?</button>
+  </div>
+</header>
+<div class="sync" id="sync"></div>
+<main class="wrap" id="app"><div class="empty"><div class="big">♣</div>Cargando…</div></main>
+
+<nav class="tabs">
+  <a href="#/" data-tab="rank"><span class="i">🏆</span>Clasificación</a>
+  <a href="#/jornadas" data-tab="days"><span class="i">📅</span>Jornadas</a>
+  <a href="#/nueva" data-tab="new"><span class="i">➕</span>Jugar</a>
+  <a href="#/ajustes" data-tab="cfg"><span class="i">⚙️</span>Ajustes</a>
+</nav>
+
+<script>
+/* =========================================================
+   Continental · Happy Family
+   Datos: data/continental.json dentro del propio repositorio
+   de GitHub (lectura/escritura por la API de GitHub).
+   ========================================================= */
+
+const ROUNDS = [
+  '2 tríos',
+  '1 trío y 1 escalera',
+  '2 escaleras',
+  '3 tríos',
+  '2 tríos y 1 escalera',
+  '1 trío y 2 escaleras',
+  '3 escaleras'
+];
+const ROUNDS_SHORT = ['2T','1T 1E','2E','3T','2T 1E','1T 2E','3E'];
+const DATA_PATH = 'data/continental.json';
+const LS = { cfg:'ch.cfg', me:'ch.me', local:'ch.localData' };
+
+/* ---------- Config ---------- */
+function detectRepo(){
+  // https://<owner>.github.io/<repo>/
+  const h = location.hostname, parts = location.pathname.split('/').filter(Boolean);
+  if (h.endsWith('.github.io')) return { owner: h.replace('.github.io',''), repo: parts[0] || (h) };
+  return { owner:'', repo:'' };
+}
+function loadCfg(){
+  let c = {};
+  try { c = JSON.parse(localStorage.getItem(LS.cfg) || '{}'); } catch(e){}
+  const d = detectRepo();
+  return { owner: c.owner || d.owner, repo: c.repo || d.repo, branch: c.branch || 'main', token: c.token || '' };
+}
+function saveCfg(c){ try{ localStorage.setItem(LS.cfg, JSON.stringify(c)); }catch(e){} }
+let cfg = loadCfg();
+
+// Enlace de acceso: ...#token=XXXX  -> se guarda y se limpia de la URL
+(function readTokenFromLink(){
+  const m = location.hash.match(/token=([^&]+)/);
+  if (m){
+    cfg.token = decodeURIComponent(m[1]); saveCfg(cfg);
+    history.replaceState(null,'',location.pathname + location.search + '#/');
+    setTimeout(()=>toast('✅ Dispositivo vinculado. Ya puedes anotar puntos.'), 400);
+  }
+})();
+
+const isGitHub = () => !!(cfg.owner && cfg.repo);
+
+/* ---------- Store ---------- */
+let DB = null, SHA = null, lastSync = null;
+
+function b64ToUtf8(b64){
+  const bin = atob(b64.replace(/\n/g,''));
+  const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+function utf8ToB64(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin);
+}
+function ghHeaders(){
+  const h = { 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28' };
+  if (cfg.token) h['Authorization'] = 'Bearer ' + cfg.token;
+  return h;
+}
+function apiUrl(){ return `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${DATA_PATH}`; }
+
+function defaultData(){
+  return { version:1, players:[
+    {id:'joan',name:'Joan'},{id:'merce',name:'Mercè'},{id:'albert',name:'Albert'},
+    {id:'ricard',name:'Ricard'},{id:'cristina-l',name:'Cristina L.'},{id:'cristina-a',name:'Cristina A.'}
+  ], sessions:[] };
+}
+
+async function load(){
+  if (!isGitHub()){
+    try { DB = JSON.parse(localStorage.getItem(LS.local) || 'null'); } catch(e){ DB = null; }
+    if (!DB) DB = defaultData();
+    SHA = null; lastSync = new Date(); setSync(); return;
+  }
+  const r = await fetch(apiUrl() + '?ref=' + encodeURIComponent(cfg.branch) + '&_=' + Date.now(),
+                        { headers: ghHeaders(), cache:'no-store' });
+  if (r.status === 404){
+    // El fichero aún no existe: se creará en la primera escritura
+    DB = defaultData(); SHA = null; lastSync = new Date(); setSync(); return;
+  }
+  if (!r.ok) throw new Error(await ghError(r));
+  const j = await r.json();
+  DB = JSON.parse(b64ToUtf8(j.content)); SHA = j.sha; lastSync = new Date(); setSync();
+}
+
+async function ghError(r){
+  let msg = 'Error ' + r.status;
+  try { const j = await r.json(); if (j.message) msg += ': ' + j.message; } catch(e){}
+  if (r.status === 401) msg = 'La clave de acceso no es válida o ha caducado (Ajustes).';
+  if (r.status === 403 && !cfg.token) msg = 'GitHub ha limitado las consultas sin clave. Vincula este dispositivo en Ajustes.';
+  if (r.status === 404 && !cfg.token) msg = 'No encuentro el repositorio. ¿Es privado? Vincula este dispositivo en Ajustes.';
+  return msg;
+}
+
+/* mutate(fn, mensaje): aplica fn sobre una copia fresca de los datos y la guarda.
+   Si otra persona ha guardado a la vez (conflicto), recarga y vuelve a aplicar. */
+let busy = false;
+async function mutate(fn, message){
+  if (busy) throw new Error('Guardando, espera un momento…');
+  busy = true; setSync('Guardando…');
+  try{
+    for (let attempt = 0; attempt < 4; attempt++){
+      if (attempt > 0 || isGitHub()) await load();
+      const copy = JSON.parse(JSON.stringify(DB));
+      const result = fn(copy);              // puede lanzar Error con mensaje para el usuario
+      if (!isGitHub()){
+        localStorage.setItem(LS.local, JSON.stringify(copy)); DB = copy; lastSync = new Date(); setSync(); return result;
+      }
+      if (!cfg.token) throw new Error('Este dispositivo no está vinculado. Ve a Ajustes para poder anotar.');
+      const body = { message: message + (ME() ? ` (por ${playerName(ME())})` : ''),
+                     content: utf8ToB64(JSON.stringify(copy, null, 2) + '\n'), branch: cfg.branch };
+      if (SHA) body.sha = SHA;
+      const r = await fetch(apiUrl(), { method:'PUT', headers:{...ghHeaders(),'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      if (r.ok){
+        const j = await r.json(); DB = copy; SHA = j.content.sha; lastSync = new Date(); setSync(); return result;
+      }
+      if (r.status === 409 || r.status === 422) continue;   // conflicto: reintentar
+      throw new Error(await ghError(r));
+    }
+    throw new Error('No se pudo guardar tras varios intentos. Vuelve a probar.');
+  } finally { busy = false; setSync(); }
+}
+
+function setSync(text){
+  const el = document.getElementById('sync');
+  el.classList.remove('err');
+  if (text){ el.textContent = text; return; }
+  if (!isGitHub()){ el.textContent = '⚠︎ Modo local (solo este dispositivo) · configura GitHub en Ajustes'; return; }
+  const t = lastSync ? lastSync.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}) : '—';
+  el.textContent = (cfg.token ? '🔗 ' : '👁 solo lectura · ') + `${cfg.owner}/${cfg.repo} · actualizado ${t}`;
+}
+function syncError(msg){ const el = document.getElementById('sync'); el.textContent = '⚠︎ ' + msg; el.classList.add('err'); }
+
+/* ---------- Helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const ME = () => localStorage.getItem(LS.me) || '';
+const player = id => DB.players.find(p => p.id === id);
+const playerName = id => (player(id) || {name:'?'}).name;
+function shortName(id){ const n = playerName(id), w = n.split(/\s+/);
+  return n.length <= 7 ? n : (w.length > 1 ? w[0].slice(0,4) + ' ' + w.slice(1).join(' ') : n.slice(0,7)); }
+function fmtDate(iso, long){
+  const d = new Date(iso + 'T12:00:00');
+  return d.toLocaleDateString('es-ES', long ? {weekday:'long', day:'numeric', month:'long', year:'numeric'}
+                                            : {day:'numeric', month:'short', year:'numeric'});
+}
+function todayISO(){ const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
+function toast(msg, ms=2600){ const t = document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), ms); }
+function slug(s){ return s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || uid(); }
+
+function gameTotals(g){
+  const t = {}; g.players.forEach(p => t[p] = 0);
+  g.rounds.forEach(r => g.players.forEach(p => t[p] += (r.scores[p] || 0)));
+  return t;
+}
+const isFinished = g => g.rounds.length >= ROUNDS.length;
+function gameWinners(g){
+  if (!isFinished(g)) return [];
+  const t = gameTotals(g); const min = Math.min(...Object.values(t));
+  return g.players.filter(p => t[p] === min);
+}
+function findSession(id){ return DB.sessions.find(s => s.id === id); }
+function findGame(s, gid){ return s && s.games.find(g => g.id === gid); }
+
+/* ---------- Modal ---------- */
+function modal(html){
+  closeModal();
+  const bg = document.createElement('div'); bg.className='modal-bg'; bg.id='modal';
+  bg.innerHTML = `<div class="modal">${html}</div>`;
+  bg.addEventListener('click', e => { if (e.target === bg) closeModal(); });
+  document.body.appendChild(bg);
+}
+function closeModal(){ const m = $('#modal'); if (m) m.remove(); }
+
+function pickMe(){
+  if (!DB) return;
+  const cur = ME();
+  modal(`<h2>¿Quién eres?</h2><p class="muted">Así quedará anotado quién introduce cada puntuación.</p>
+    <div class="grid2" style="margin-top:12px">${DB.players.map(p =>
+      `<button class="btn ${p.id===cur?'':'ghost'}" onclick="setMe('${p.id}')">${esc(p.name)}</button>`).join('')}</div>`);
+}
+function setMe(id){ localStorage.setItem(LS.me, id); closeModal(); updateMe(); }
+function updateMe(){ $('#meBtn').textContent = ME() && DB && player(ME()) ? '👤 ' + playerName(ME()) : '¿Quién eres?'; }
+
+/* =========================================================
+   VISTAS
+   ========================================================= */
+let rankMode = localStorage.getItem('ch.rankMode') || 'total';
+let rankYear = 'all';
+
+function viewRanking(){
+  const years = [...new Set(DB.sessions.map(s => s.date.slice(0,4)))].sort().reverse();
+  const stats = {};
+  DB.players.forEach(p => stats[p.id] = { id:p.id, pts:0, games:0, wins:0, zeros:0 });
+  DB.sessions.filter(s => rankYear === 'all' || s.date.startsWith(rankYear)).forEach(s => s.games.forEach(g => {
+    if (!g.rounds.length) return;
+    const t = gameTotals(g);
+    g.players.forEach(p => { if (!stats[p]) return; stats[p].pts += t[p];
+      g.rounds.forEach(r => { if (r.scores[p] === 0) stats[p].zeros++; }); });
+    if (isFinished(g)){
+      g.players.forEach(p => stats[p] && stats[p].games++);
+      gameWinners(g).forEach(p => stats[p] && stats[p].wins++);
+    }
+  }));
+  let rows = Object.values(stats).filter(s => s.pts > 0 || s.games > 0);
+  rows.forEach(s => s.avg = s.games ? s.pts / s.games : null);
+  const key = { total: (a,b) => a.pts - b.pts,
+                avg: (a,b) => (a.avg ?? 1e9) - (b.avg ?? 1e9),
+                wins: (a,b) => b.wins - a.wins || (a.avg ?? 1e9) - (b.avg ?? 1e9) }[rankMode];
+  rows.sort(key);
+
+  const medals = ['🥇','🥈','🥉'];
+  const live = [];
+  DB.sessions.forEach(s => s.games.forEach(g => { if (!isFinished(g)) live.push({s,g}); }));
+
+  return `
+  ${live.length ? `<div class="card"><h3>🃏 Partida en juego</h3>${live.map(({s,g}) =>
+      `<a class="btn block" style="display:block;text-align:center;text-decoration:none;margin-top:6px" href="#/partida/${s.id}/${g.id}">
+        ${fmtDate(s.date)} · Partida ${g.number} · ronda ${g.rounds.length + 1} de ${ROUNDS.length} →</a>`).join('')}</div>` : ''}
+  <div class="card">
+    <div class="spread"><h2>Clasificación</h2>
+      ${years.length ? `<select style="width:auto" onchange="rankYear=this.value;render()">
+        <option value="all">Siempre</option>${years.map(y => `<option ${y===rankYear?'selected':''}>${y}</option>`).join('')}</select>` : ''}
+    </div>
+    <p class="muted" style="margin:0 0 10px">En el Continental gana quien <b>menos</b> puntos tiene.</p>
+    <div class="seg" style="margin-bottom:10px">
+      ${[['total','Puntos totales'],['avg','Media por partida'],['wins','Victorias']].map(([k,l]) =>
+        `<button class="${rankMode===k?'on':''}" onclick="rankMode='${k}';localStorage.setItem('ch.rankMode',rankMode);render()">${l}</button>`).join('')}
+    </div>
+    ${rows.length ? `<div class="scroll"><table class="rank">
+      <thead><tr><th></th><th class="l">Jugador</th><th>Puntos</th><th>Part.</th><th>Media</th><th>Vict.</th></tr></thead>
+      <tbody>${rows.map((s,i) => `<tr class="${i===0?'lead':''}">
+        <td class="medal">${medals[i] || (i+1)}</td>
+        <td class="l"><b>${esc(playerName(s.id))}</b></td>
+        <td><b>${s.pts}</b></td><td>${s.games}</td>
+        <td>${s.avg === null ? '—' : s.avg.toFixed(1)}</td><td>${s.wins}</td></tr>`).join('')}</tbody>
+    </table></div>
+    <p class="muted" style="margin-top:8px;font-size:12px">Puntos: todas las rondas anotadas. Partidas, media y victorias: solo partidas terminadas (7 rondas).</p>`
+    : `<div class="empty"><div class="big">🂡</div>Todavía no hay puntuaciones.<br><br><a class="btn" href="#/nueva" style="text-decoration:none">Empezar una jornada</a></div>`}
+  </div>`;
+}
+
+function viewSessions(){
+  const ss = [...DB.sessions].sort((a,b) => b.date.localeCompare(a.date) || b.created.localeCompare(a.created));
+  return `<div class="card"><div class="spread"><h2>Jornadas</h2><a class="btn small" href="#/nueva" style="text-decoration:none">+ Nueva</a></div>
+  ${ss.length ? `<ul class="list">${ss.map(s => {
+      const live = s.games.some(g => !isFinished(g));
+      return `<li><a href="#/jornada/${s.id}"><div><b>${fmtDate(s.date)}</b><br>
+        ${s.players.map(p => `<span class="chip">${esc(playerName(p))}</span>`).join('')}</div>
+        <div style="text-align:right;white-space:nowrap">${live?'<span class="chip live">en juego</span><br>':''}
+        <span class="muted">${s.games.length} partida${s.games.length===1?'':'s'} ›</span></div></a></li>`;}).join('')}</ul>`
+    : `<div class="empty"><div class="big">📅</div>Aún no hay jornadas.</div>`}</div>`;
+}
+
+function viewNewSession(){
+  const today = todayISO();
+  const existing = DB.sessions.find(s => s.date === today);
+  return `<div class="card"><h2>Nueva jornada</h2>
+    ${existing ? `<div class="warn" style="border-color:var(--gold);background:#fff9e6">Ya hay una jornada hoy.
+      <a href="#/jornada/${existing.id}"><b>Ir a la jornada de hoy →</b></a></div>` : ''}
+    <label class="field"><span>Fecha</span><input type="date" id="nsDate" value="${today}"></label>
+    <div class="field"><span>¿Quién juega? (marca con ✔)</span>
+      <div class="grid2">${DB.players.map(p => `<label class="check"><input type="checkbox" value="${p.id}" class="nsP" checked> ${esc(p.name)}</label>`).join('')}</div>
+    </div>
+    <button class="btn block" onclick="createSession()">Crear jornada y empezar la partida 1</button>
+  </div>`;
+}
+
+async function createSession(){
+  const date = $('#nsDate').value;
+  const players = [...document.querySelectorAll('.nsP:checked')].map(i => i.value);
+  if (!date) return toast('Pon una fecha');
+  if (players.length < 2) return toast('Marca al menos 2 jugadores');
+  try{
+    const ids = await mutate(db => {
+      const s = { id: uid(), date, players, created: new Date().toISOString(), createdBy: ME() || null, games: [] };
+      const g = { id: uid(), number: 1, players: [...players], created: new Date().toISOString(), rounds: [] };
+      s.games.push(g); db.sessions.push(s);
+      return { sid: s.id, gid: g.id };
+    }, `Nueva jornada ${date}`);
+    location.hash = `#/partida/${ids.sid}/${ids.gid}`;
+  }catch(e){ toast(e.message, 4000); }
+}
+
+function viewSession(sid){
+  const s = findSession(sid);
+  if (!s) return notFound();
+  // ranking del día
+  const day = {}; s.players.forEach(p => day[p] = { pts:0, wins:0 });
+  s.games.forEach(g => { const t = gameTotals(g); g.players.forEach(p => { day[p] = day[p] || {pts:0,wins:0}; day[p].pts += t[p]; });
+    gameWinners(g).forEach(p => day[p].wins++); });
+  const dayRows = Object.entries(day).sort((a,b) => a[1].pts - b[1].pts);
+  const live = s.games.some(g => !isFinished(g));
+  return `<a class="back" href="#/jornadas">‹ Jornadas</a>
+  <div class="card"><h2 style="text-transform:capitalize">${fmtDate(s.date, true)}</h2>
+    <div>${s.players.map(p => `<span class="chip on">✔ ${esc(playerName(p))}</span>`).join('')}</div>
+  </div>
+  <div class="card"><div class="spread"><h3>Partidas</h3>
+    <button class="btn small" ${live?'disabled title="Termina antes la partida en juego"':''} onclick="newGame('${s.id}')">+ Nueva partida</button></div>
+    <ul class="list">${s.games.map(g => {
+      const t = gameTotals(g), w = gameWinners(g);
+      return `<li><a href="#/partida/${s.id}/${g.id}"><div><b>Partida ${g.number}</b><br>
+        <span class="muted">${isFinished(g) ? '🏆 ' + w.map(p => esc(playerName(p))).join(' y ') + ' · ' + t[w[0]] + ' pts'
+                                             : `En juego · ronda ${g.rounds.length + 1} de ${ROUNDS.length}`}</span></div>
+        <span>${isFinished(g)?'':'<span class="chip live">en juego</span>'} ›</span></a></li>`;}).join('')}</ul>
+  </div>
+  <div class="card"><h3>Resumen del día</h3><table>
+    <thead><tr><th class="l">Jugador</th><th>Puntos</th><th>Victorias</th></tr></thead>
+    <tbody>${dayRows.map(([p,v],i) => `<tr class="${i===0&&v.pts>0?'lead':''}"><td class="l">${esc(playerName(p))}</td><td><b>${v.pts}</b></td><td>${v.wins}</td></tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+function newGame(sid){
+  const s = findSession(sid);
+  const last = s.games[s.games.length - 1];
+  const sel = last ? last.players : s.players;
+  modal(`<h2>Partida ${s.games.length + 1}</h2><p class="muted">¿Quién juega esta partida?</p>
+    <div class="grid2" style="margin:12px 0">${DB.players.map(p => `<label class="check"><input type="checkbox" class="ngP" value="${p.id}" ${sel.includes(p.id)?'checked':''}> ${esc(p.name)}</label>`).join('')}</div>
+    <div class="row"><button class="btn ghost" onclick="closeModal()">Cancelar</button>
+    <button class="btn" style="flex:1" onclick="createGame('${sid}')">Empezar</button></div>`);
+}
+async function createGame(sid){
+  const players = [...document.querySelectorAll('.ngP:checked')].map(i => i.value);
+  if (players.length < 2) return toast('Marca al menos 2 jugadores');
+  closeModal();
+  try{
+    const gid = await mutate(db => {
+      const s = db.sessions.find(x => x.id === sid);
+      if (s.games.some(g => !isFinished(g))) throw new Error('Ya hay una partida en juego en esta jornada.');
+      const g = { id: uid(), number: s.games.length + 1, players, created: new Date().toISOString(), rounds: [] };
+      players.forEach(p => { if (!s.players.includes(p)) s.players.push(p); });
+      s.games.push(g); return g.id;
+    }, 'Nueva partida');
+    location.hash = `#/partida/${sid}/${gid}`;
+  }catch(e){ toast(e.message, 4000); }
+}
+
+function viewGame(sid, gid){
+  const s = findSession(sid), g = findGame(s, gid);
+  if (!g) return notFound();
+  const totals = gameTotals(g), done = isFinished(g), winners = gameWinners(g);
+  const acc = {}; g.players.forEach(p => acc[p] = 0);
+  const next = g.rounds.length;
+  const minNow = g.rounds.length ? Math.min(...g.players.map(p => totals[p])) : null;
+
+  const table = `<div class="scroll"><table class="score-table">
+    <thead><tr><th class="l">#</th>${g.players.map(p => `<th class="pl" title="${esc(playerName(p))}">${esc(shortName(p))}</th>`).join('')}</tr></thead>
+    <tbody>${ROUNDS.map((c,i) => {
+      const r = g.rounds[i];
+      if (!r) return `<tr style="opacity:${i===next?1:.45}"><td class="rd" title="${c}"><b>${i+1}</b>${ROUNDS_SHORT[i]}${i===next?' ◀':''}</td>${g.players.map(()=>'<td>·</td>').join('')}</tr>`;
+      return `<tr><td class="rd" title="${c} · anotado por ${esc(playerName(r.by))}"><b>${i+1}</b>${ROUNDS_SHORT[i]}</td>${g.players.map(p => {
+        acc[p] += r.scores[p];
+        return `<td><span class="pts ${r.scores[p]===0?'zero':''}">${r.scores[p]===0?'0 ✓':r.scores[p]}</span>${i?`<span class="acc">${acc[p]}</span>`:''}</td>`;}).join('')}</tr>`;
+    }).join('')}
+    <tr class="total"><td class="l">Total</td>${g.players.map(p => `<td class="${g.rounds.length && totals[p]===minNow?'win':''}">${totals[p]}</td>`).join('')}</tr>
+    </tbody></table></div>`;
+
+  let entry = '';
+  if (!done){
+    entry = `<div class="card" id="entryCard">
+      <div class="contract"><small>Ronda ${next+1} de ${ROUNDS.length} · contrato</small><div>${ROUNDS[next]}</div></div>
+      <p class="muted" style="margin-top:0">Puntos que le quedan en la mano a cada uno (quien cierra: 0).</p>
+      ${g.players.map(p => `<div class="entry"><label for="sc_${p}"><b>${esc(playerName(p))}</b>
+          <button class="btn ghost small zbtn" type="button" onclick="setZero('${p}')">cierra (0)</button></label>
+        <input id="sc_${p}" type="number" inputmode="numeric" min="0" step="1" placeholder="—"></div>`).join('')}
+      <button class="btn block red" style="margin-top:10px" onclick="confirmRound('${sid}','${gid}')">Anotar ronda ${next+1}</button>
+    </div>`;
+  }
+
+  return `<a class="back" href="#/jornada/${s.id}">‹ ${fmtDate(s.date)}</a>
+  <div class="card">
+    <div class="spread"><h2>Partida ${g.number}</h2>${done?'<span class="chip on">terminada</span>':'<span class="chip live">en juego</span>'}</div>
+    ${done ? `<p style="margin:4px 0 10px;font-size:17px">🏆 Gana <b>${winners.map(p => esc(playerName(p))).join(' y ')}</b> con ${totals[winners[0]]} puntos</p>` : ''}
+    ${table}
+    <p class="muted" style="font-size:11px;margin:8px 0 0">T = trío · E = escalera · número pequeño = acumulado</p>
+  </div>
+  ${entry}
+  ${done ? `<button class="btn block" style="margin-bottom:12px" onclick="newGame('${sid}')">+ Otra partida</button>` : ''}`;
+}
+
+function setZero(p){ const i = $('#sc_' + p); i.value = 0; i.focus(); }
+
+function confirmRound(sid, gid){
+  if (!ME()) { toast('Primero dinos quién eres'); return pickMe(); }
+  const s = findSession(sid), g = findGame(s, gid);
+  const scores = {};
+  for (const p of g.players){
+    const v = $('#sc_' + p).value.trim();
+    if (v === '' || !/^\d+$/.test(v)) { toast(`Falta la puntuación de ${playerName(p)}`); $('#sc_' + p).focus(); return; }
+    scores[p] = parseInt(v, 10);
+  }
+  const zeros = Object.values(scores).filter(v => v === 0).length;
+  const n = g.rounds.length;
+  modal(`<h2>¿Confirmas la ronda ${n+1}?</h2>
+    <p class="muted" style="margin:0">${ROUNDS[n]}</p>
+    <table style="margin:12px 0"><tbody>${g.players.map(p => `<tr><td class="l">${esc(playerName(p))}</td>
+      <td style="font-size:20px;font-weight:700" class="${scores[p]===0?'zero':''}">${scores[p]}</td></tr>`).join('')}</tbody></table>
+    ${zeros === 0 ? `<div class="warn" style="border-color:var(--gold);background:#fff9e6">Nadie tiene 0 puntos. ¿Seguro que nadie ha cerrado?</div>` : ''}
+    <div class="warn">⚠︎ Una vez confirmada, la puntuación <b>no se podrá modificar</b>.</div>
+    <div class="row"><button class="btn ghost" onclick="closeModal()">Revisar</button>
+      <button class="btn red" style="flex:1" id="okBtn" onclick="saveRound('${sid}','${gid}',${n},${JSON.stringify(scores).replace(/"/g,'&quot;')})">Sí, confirmar</button></div>`);
+}
+
+async function saveRound(sid, gid, n, scores){
+  $('#okBtn').disabled = true; $('#okBtn').textContent = 'Guardando…';
+  try{
+    await mutate(db => {
+      const s = db.sessions.find(x => x.id === sid), g = s && s.games.find(x => x.id === gid);
+      if (!g) throw new Error('La partida ya no existe.');
+      if (g.rounds.length !== n) throw new Error('Alguien ya ha anotado esta ronda. Revisa la tabla.');
+      g.rounds.push({ n: n + 1, scores, by: ME(), at: new Date().toISOString() });
+    }, `Ronda ${n+1} · ${sid}`);
+    closeModal(); toast(n + 1 === ROUNDS.length ? '🏁 ¡Partida terminada!' : `✅ Ronda ${n+1} anotada`);
+    render();
+  }catch(e){ closeModal(); toast(e.message, 4500); render(); }
+}
+
+function viewSettings(){
+  const link = cfg.token && isGitHub() ? `${location.origin}${location.pathname}#token=${encodeURIComponent(cfg.token)}` : '';
+  return `<div class="card"><h2>Jugadores</h2>
+    <ul class="list">${DB.players.map(p => `<li><div class="spread" style="padding:8px 0"><span>${esc(p.name)}</span>
+      <button class="btn ghost small" onclick="renamePlayer('${p.id}')">Renombrar</button></div></li>`).join('')}</ul>
+    <div class="row" style="margin-top:10px"><input type="text" id="newName" placeholder="Nuevo jugador" style="flex:1">
+      <button class="btn" onclick="addPlayer()">Añadir</button></div>
+  </div>
+
+  <div class="card"><h2>Este dispositivo</h2>
+    <p class="muted">Quién eres: <b>${ME() ? esc(playerName(ME())) : '—'}</b> <button class="btn ghost small" onclick="pickMe()">Cambiar</button></p>
+    <p class="muted">Estado: ${!isGitHub() ? '⚠︎ modo local, los datos solo están en este dispositivo'
+      : cfg.token ? '🔗 vinculado, puede anotar puntos' : '👁 solo lectura (falta la clave)'}</p>
+    ${link ? `<div class="field"><span>Enlace para vincular a otro familiar (envíalo por WhatsApp)</span>
+      <div class="row"><input type="text" readonly value="${esc(link)}" id="shareLink" style="flex:1;font-size:12px">
+      <button class="btn small" onclick="copyLink()">Copiar</button></div>
+      <p class="muted" style="font-size:12px">Quien abra este enlace podrá anotar puntos. No lo publiques fuera de la familia.</p></div>` : ''}
+  </div>
+
+  <div class="card"><h2>Conexión con GitHub</h2>
+    <p class="muted">Los datos se guardan en <code>${DATA_PATH}</code> dentro del repositorio.</p>
+    <div class="grid2">
+      <label class="field"><span>Usuario u organización</span><input type="text" id="cfOwner" value="${esc(cfg.owner)}"></label>
+      <label class="field"><span>Repositorio</span><input type="text" id="cfRepo" value="${esc(cfg.repo)}"></label>
+    </div>
+    <label class="field"><span>Rama</span><input type="text" id="cfBranch" value="${esc(cfg.branch)}"></label>
+    <label class="field"><span>Clave de acceso (token de GitHub)</span><input type="text" id="cfToken" value="${esc(cfg.token)}" placeholder="github_pat_…" autocomplete="off"></label>
+    <button class="btn block" onclick="saveSettings()">Guardar y conectar</button>
+  </div>`;
+}
+
+async function saveSettings(){
+  cfg = { owner: $('#cfOwner').value.trim(), repo: $('#cfRepo').value.trim(),
+          branch: $('#cfBranch').value.trim() || 'main', token: $('#cfToken').value.trim() };
+  saveCfg(cfg);
+  try { await load(); toast('✅ Conectado'); } catch(e){ syncError(e.message); toast(e.message, 4500); }
+  render();
+}
+function copyLink(){ const i = $('#shareLink'); i.select(); navigator.clipboard?.writeText(i.value); toast('Enlace copiado'); }
+async function addPlayer(){
+  const name = $('#newName').value.trim(); if (!name) return;
+  try{ await mutate(db => {
+      if (db.players.some(p => p.name.toLowerCase() === name.toLowerCase())) throw new Error('Ya existe ese jugador');
+      let id = slug(name); while (db.players.some(p => p.id === id)) id += '-2';
+      db.players.push({ id, name });
+    }, `Nuevo jugador ${name}`); render(); toast('Jugador añadido');
+  }catch(e){ toast(e.message, 4000); }
+}
+function renamePlayer(id){
+  modal(`<h2>Renombrar</h2><input type="text" id="rnName" value="${esc(playerName(id))}">
+    <div class="row" style="margin-top:12px"><button class="btn ghost" onclick="closeModal()">Cancelar</button>
+    <button class="btn" style="flex:1" onclick="doRename('${id}')">Guardar</button></div>`);
+}
+async function doRename(id){
+  const name = $('#rnName').value.trim(); if (!name) return; closeModal();
+  try{ await mutate(db => { db.players.find(p => p.id === id).name = name; }, `Renombrar jugador ${id}`); render(); updateMe(); }
+  catch(e){ toast(e.message, 4000); }
+}
+
+function notFound(){ return `<div class="card empty"><div class="big">🃏</div>No encontrado.<br><br><a href="#/">Volver</a></div>`; }
+
+/* ---------- Router ---------- */
+function render(){
+  if (!DB) return;
+  const h = location.hash.replace(/^#/, '') || '/';
+  const parts = h.split('/').filter(Boolean);
+  let html, tab = 'rank';
+  if (!parts.length)                     { html = viewRanking(); }
+  else if (parts[0] === 'jornadas')      { html = viewSessions(); tab='days'; }
+  else if (parts[0] === 'nueva')         { html = viewNewSession(); tab='new'; }
+  else if (parts[0] === 'jornada')       { html = viewSession(parts[1]); tab='days'; }
+  else if (parts[0] === 'partida')       { html = viewGame(parts[1], parts[2]); tab='days'; }
+  else if (parts[0] === 'ajustes')       { html = viewSettings(); tab='cfg'; }
+  else html = notFound();
+  // conservar lo que se esté tecleando en la ronda si se refresca la vista
+  const typed = {}; document.querySelectorAll('[id^=sc_]').forEach(i => typed[i.id] = i.value);
+  $('#app').innerHTML = html;
+  Object.entries(typed).forEach(([k,v]) => { const i = document.getElementById(k); if (i) i.value = v; });
+  document.querySelectorAll('nav.tabs a').forEach(a => a.classList.toggle('on', a.dataset.tab === tab));
+  updateMe();
+}
+window.addEventListener('hashchange', () => { render(); window.scrollTo(0,0); });
+
+/* Refresco: al volver a la app y cada 30 s (para ver lo que anotan otros) */
+async function refresh(){
+  if (busy || $('#modal') || location.hash.startsWith('#/ajustes') || location.hash.startsWith('#/nueva')) return;
+  try { await load(); render(); } catch(e){ syncError(e.message); }
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+setInterval(() => { if (!document.hidden && isGitHub()) refresh(); }, 30000);
+
+(async function init(){
+  try { await load(); }
+  catch(e){ syncError(e.message); DB = defaultData(); }
+  render();
+  if (!ME()) pickMe();
+})();
+</script>
+</body>
+</html>
