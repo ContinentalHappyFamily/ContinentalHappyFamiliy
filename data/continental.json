@@ -163,6 +163,37 @@
           ]
         }
       ]
+    },
+    {
+      "id": "mwj27o9emgkg",
+      "date": "2026-11-16",
+      "players": [
+        "joan",
+        "merce",
+        "albert",
+        "ricard",
+        "cristina-l",
+        "cristina-a"
+      ],
+      "created": "2026-11-16T09:26:59.474Z",
+      "createdBy": "joan",
+      "games": [
+        {
+          "id": "mwj27o9ebduc",
+          "number": 1,
+          "players": [
+            "joan",
+            "merce",
+            "albert",
+            "ricard",
+            "cristina-l",
+            "cristina-a"
+          ],
+          "absent": [],
+          "created": "2026-11-16T09:26:59.475Z",
+          "rounds": []
+        }
+      ]
     }
   ]
 }
