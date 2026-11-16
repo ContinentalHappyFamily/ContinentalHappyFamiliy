@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "players": [
+    {
+      "id": "joan",
+      "name": "Joan"
+    },
+    {
+      "id": "merce",
+      "name": "Mercè"
+    },
+    {
+      "id": "albert",
+      "name": "Albert"
+    },
+    {
+      "id": "ricard",
+      "name": "Ricard"
+    },
+    {
+      "id": "cristina-l",
+      "name": "Cristina L."
+    },
+    {
+      "id": "cristina-a",
+      "name": "Cristina A."
+    }
+  ],
+  "sessions": [
+    {
+      "id": "j20261115",
+      "date": "2026-11-15",
+      "players": [
+        "joan",
+        "ricard",
+        "cristina-l",
+        "cristina-a",
+        "albert"
+      ],
+      "created": "2026-11-15T16:00:00.000Z",
+      "createdBy": "joan",
+      "games": [
+        {
+          "id": "p20261115a",
+          "number": 1,
+          "players": [
+            "joan",
+            "ricard",
+            "cristina-l",
+            "cristina-a",
+            "albert"
+          ],
+          "created": "2026-11-15T16:00:00.000Z",
+          "rounds": [
+            {
+              "n": 1,
+              "scores": {
+                "joan": 7,
+                "ricard": 0,
+                "cristina-l": 8,
+                "cristina-a": 12,
+                "albert": 47
+              },
+              "by": "joan",
+              "at": "2026-11-15T17:00:00.000Z"
+            },
+            {
+              "n": 2,
+              "scores": {
+                "joan": 1,
+                "ricard": 9,
+                "cristina-l": 61,
+                "cristina-a": 14,
+                "albert": 0
+              },
+              "by": "joan",
+              "at": "2026-11-15T17:01:00.000Z"
+            },
+            {
+              "n": 3,
+              "scores": {
+                "joan": 0,
+                "ricard": 78,
+                "cristina-l": 59,
+                "cristina-a": 23,
+                "albert": 7
+              },
+              "by": "joan",
+              "at": "2026-11-15T17:02:00.000Z"
+            },
+            {
+              "n": 4,
+              "scores": {
+                "joan": 121,
+                "ricard": 196,
+                "cristina-l": 9,
+                "cristina-a": 0,
+                "albert": 119
+              },
+              "by": "joan",
+              "at": "2026-11-15T17:03:00.000Z"
+            },
+            {
+              "n": 5,
+              "scores": {
+                "joan": 1,
+                "ricard": 2,
+                "cristina-l": 0,
+                "cristina-a": 3,
+                "albert": 1
+              },
+              "by": "joan",
+              "at": "2026-11-15T17:04:00.000Z"
+            },
+            {
+              "n": 6,
+              "scores": {
+                "joan": 1,
+                "ricard": 149,
+                "cristina-l": 0,
+                "cristina-a": 46,
+                "albert": 7
+              },
+              "by": "joan",
+              "at": "2026-11-15T17:05:00.000Z"
+            },
+            {
+              "n": 7,
+              "scores": {
+                "joan": 232,
+                "ricard": 178,
+                "cristina-l": 0,
+                "cristina-a": 179,
+                "albert": 24
+              },
+              "by": "joan",
+              "at": "2026-11-15T17:06:00.000Z"
+            },
+            {
+              "n": 8,
+              "scores": {
+                "joan": 151,
+                "ricard": 174,
+                "cristina-l": 217,
+                "cristina-a": 6,
+                "albert": 1
+              },
+              "by": "joan",
+              "at": "2026-11-15T17:07:00.000Z"
+            },
+            {
+              "n": 9,
+              "scores": {
+                "joan": 186,
+                "ricard": 2,
+                "cristina-l": 0,
+                "cristina-a": 9,
+                "albert": 218
+              },
+              "by": "joan",
+              "at": "2026-11-15T17:08:00.000Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
